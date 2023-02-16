@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  # Cria o container de testes
+  todotests:
+    build: ./todo-app/tests
+    depends_on:
+      - todofrontend
+      - todobackend
+    environment:
+      - FRONT_HOST=frontend
+  
+  # Constroi o serviço de frontend a partir do dockerfile do diretorio todo-app/front-end/
+  todofrontend:
+    build: ./todo-app/frontend
+    restart: on-failure
+    ports:
+      - 3000:3000
+    depends_on:
+      - todobackend
+    environment:
+      - REACT_APP_API_HOST=backend
+
+  todobackend:
+    build: ./todo-app/backend
+    restart: on-failure
+    ports:
+      - 3001:3001
